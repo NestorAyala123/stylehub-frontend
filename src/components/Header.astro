@@ -1,0 +1,20 @@
+---
+import { supabase } from '../lib/supabaseClient';
+---
+
+<header class="bg-white shadow-sm sticky top-0 z-50">
+  <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+    <a href="/" class="text-2xl font-bold text-primary-600">StyleHub</a>
+    
+    <nav class="hidden md:flex space-x-6">
+      <a href="/" class="hover:text-primary-500">Inicio</a>
+      <a href="/productos" class="hover:text-primary-500">Productos</a>
+    </nav>
+
+    <div class="flex items-center space-x-4">
+      <button class="p-2 rounded-full hover:bg-gray-100" id="cart-button">
+        🛒
+      </button>
+    </div>
+  </div>
+</header>

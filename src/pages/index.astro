@@ -1,11 +1,10 @@
 ---
-import Welcome from '../components/Welcome.astro';
-import Layout from '../layouts/Layout.astro';
-
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+import MainLayout from '../layouts/MainLayout.astro';
 ---
 
-<Layout>
-	<Welcome />
-</Layout>
+<MainLayout>
+  <section class="container mx-auto px-4 py-8">
+    <h1 class="text-3xl font-bold text-primary-600 mb-6">Bienvenido a StyleHub</h1>
+    <p class="text-lg text-gray-700">Próximamente: Catálogo de productos</p>
+  </section>
+</MainLayout>
