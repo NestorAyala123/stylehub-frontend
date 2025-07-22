@@ -1,10 +1,116 @@
 ---
-import MainLayout from '../layouts/MainLayout.astro';
+// src/pages/index.astro
+import Header from '../components/Header.astro';
 ---
 
-<MainLayout>
-  <section class="container mx-auto px-4 py-8">
-    <h1 class="text-3xl font-bold text-primary-600 mb-6">Bienvenido a StyleHub</h1>
-    <p class="text-lg text-gray-700">Próximamente: Catálogo de productos</p>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>StyleHub - Moda Moderna</title>
+</head>
+<body class="bg-gray-50 min-h-screen">
+  <Header />
+
+  <!-- Hero Section con fondo animado -->
+  <section class="relative min-h-screen flex items-center justify-center overflow-hidden">
+    <!-- Fondo con gradiente animado -->
+    <div class="absolute inset-0 bg-gradient-to-br from-primary-50 via-white to-primary-100 animate-gradient-xy"></div>
+
+    <!-- Contenido principal -->
+    <div class="container mx-auto px-6 py-20 text-center relative z-10">
+      <h1 class="text-5xl md:text-7xl font-bold mb-6 leading-tight animate-fade-in-up">
+        <span class="bg-clip-text text-transparent bg-gradient-to-r from-gray-800 to-primary-600">
+          StyleHub
+        </span>
+      </h1>
+      <p class="text-xl md:text-2xl text-gray-600 mb-10 max-w-3xl mx-auto animate-fade-in-up" style="animation-delay: 0.4s">
+        Moda minimalista con alma. Diseños que se adaptan a tu estilo, no al revés.
+      </p>
+      <a
+        href="/productos"
+        class="inline-block bg-primary-600 text-white px-10 py-4 text-lg font-semibold rounded-full shadow-lg hover:shadow-2xl transform hover:scale-105 transition-all duration-300 animate-fade-in-up"
+        style="animation-delay: 0.8s"
+      >
+        Ver Colección
+      </a>
+    </div>
+
+    <!-- Decoración: formas flotantes sutiles -->
+    <div class="absolute top-1/4 left-10 w-20 h-20 bg-primary-200 rounded-full opacity-30 animate-float-slow"></div>
+    <div class="absolute bottom-1/3 right-12 w-16 h-16 bg-primary-300 rounded-full opacity-40 animate-float-fast"></div>
+    <div class="absolute top-1/2 right-20 w-12 h-12 bg-gray-200 rounded-full opacity-50 animate-float-medium"></div>
   </section>
-</MainLayout>
+
+  <!-- Sección de destacados -->
+  <section class="py-20 bg-white">
+    <div class="container mx-auto px-6">
+      <h2 class="text-3xl font-bold text-center text-gray-800 mb-16 animate-fade-in-up">
+        Lo que nos define
+      </h2>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-10 max-w-5xl mx-auto">
+        {[
+          { title: "Diseño Auténtico", desc: "Piezas únicas que no siguen tendencias, las crean." },
+          { title: "Calidad Duradera", desc: "Materiales premium y confección artesanal." },
+          { title: "Experiencia Fluida", desc: "Desde la selección hasta el envío, todo es simple." }
+        ].map((item, i) => (
+          <div
+            key={item.title}
+            class="text-center p-8 rounded-xl hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 animate-fade-in-up"
+            style={`animation-delay: ${1.2 + i * 0.2}s`}
+          >
+            <h3 class="text-2xl font-semibold text-gray-800 mb-4">{item.title}</h3>
+            <p class="text-gray-600 leading-relaxed">{item.desc}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Animaciones personalizadas -->
+  <style>
+    @keyframes gradient-xy {
+      0% { background-position: 0% 0%; }
+      50% { background-position: 100% 100%; }
+      100% { background-position: 0% 0%; }
+    }
+    .animate-gradient-xy {
+      background: linear-gradient(-45deg, #f0f9ff, #e0f2fe, #bae6fd, #f0f9ff);
+      background-size: 400% 400%;
+      animation: gradient-xy 15s ease infinite;
+    }
+
+    @keyframes float-slow {
+      0%, 100% { transform: translateY(0) rotate(0deg); }
+      50% { transform: translateY(-20px) rotate(5deg); }
+    }
+    @keyframes float-medium {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-15px); }
+    }
+    @keyframes float-fast {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-25px); }
+    }
+    .animate-float-slow { animation: float-slow 6s ease-in-out infinite; }
+    .animate-float-medium { animation: float-medium 4s ease-in-out infinite; }
+    .animate-float-fast { animation: float-fast 5s ease-in-out infinite; }
+
+    @keyframes fade-in-up {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    .animate-fade-in-up {
+      animation: fade-in-up 0.8s ease-out forwards;
+      opacity: 0;
+    }
+  </style>
+</body>
+</html>

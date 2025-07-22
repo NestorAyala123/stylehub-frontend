@@ -1,20 +1,125 @@
 ---
-import { supabase } from '../lib/supabaseClient';
+// src/components/ui/Header.astro
 ---
 
-<header class="bg-white shadow-sm sticky top-0 z-50">
+<header class="bg-white shadow-sm sticky top-0 z-40">
   <div class="container mx-auto px-4 py-3 flex justify-between items-center">
     <a href="/" class="text-2xl font-bold text-primary-600">StyleHub</a>
-    
     <nav class="hidden md:flex space-x-6">
       <a href="/" class="hover:text-primary-500">Inicio</a>
-      <a href="/productos" class="hover:text-primary-500">Productos</a>
+      <a href="/productos" class="font-semibold hover:text-primary-500">Productos</a>
     </nav>
-
-    <div class="flex items-center space-x-4">
-      <button class="p-2 rounded-full hover:bg-gray-100" id="cart-button">
-        🛒
-      </button>
-    </div>
   </div>
 </header>
+
+<!-- Icono flotante de carrito -->
+<div class="fixed bottom-6 right-6 z-50">
+  <button
+    class="bg-primary-600 text-white w-14 h-14 rounded-full shadow-2xl flex items-center justify-center text-xl hover:bg-primary-700 transition transform hover:scale-105"
+    onclick="toggleCartSidebar()"
+  >
+    🛒
+    <span
+      id="cart-badge"
+      class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-6 h-6 flex items-center justify-center opacity-0"
+    >
+      0
+    </span>
+  </button>
+</div>
+
+<!-- Sidebar del carrito -->
+<div
+  id="cart-sidebar"
+  class="fixed inset-y-0 right-0 w-80 bg-white shadow-xl border-l z-50 transform translate-x-full transition-transform duration-300 ease-in-out"
+>
+  <div class="flex items-center justify-between p-4 border-b">
+    <h3 class="text-lg font-semibold">Tu Carrito</h3>
+    <button
+      onclick="toggleCartSidebar()"
+      class="text-gray-500 hover:text-gray-700"
+    >
+      ✕
+    </button>
+  </div>
+  <div id="cart-items" class="p-4 max-h-[calc(100vh-120px)] overflow-y-auto">
+    <p class="text-gray-500 text-center py-4">Tu carrito está vacío</p>
+  </div>
+  <div class="p-4 border-t font-bold" id="cart-total">
+    Total: $0.00
+  </div>
+  <div class="p-4">
+    <a
+      href="/checkout"
+      class="block text-center bg-primary-600 text-white py-2 rounded hover:bg-primary-700 transition"
+      onclick="toggleCartSidebar()"
+    >
+      Ir al Checkout
+    </a>
+  </div>
+</div>
+
+<script>
+  // Mostrar/ocultar el carrito
+  window.toggleCartSidebar = function () {
+    document.getElementById('cart-sidebar').classList.toggle('translate-x-full');
+    updateCartDisplay();
+  };
+
+  // Actualizar el contenido del carrito
+  function updateCartDisplay() {
+    const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+    const itemsContainer = document.getElementById('cart-items');
+    const totalContainer = document.getElementById('cart-total');
+    const badge = document.getElementById('cart-badge');
+
+    // Actualizar badge
+    badge.textContent = cart.length;
+    badge.classList.toggle('opacity-0', cart.length === 0);
+
+    // Mostrar productos con imagen y botón de eliminar
+    if (cart.length === 0) {
+      itemsContainer.innerHTML = '<p class="text-gray-500 text-center py-4">Tu carrito está vacío</p>';
+    } else {
+      itemsContainer.innerHTML = `
+        <ul class="space-y-3">
+          ${cart.map((item: { id: any; image: any; name: any; price: number; }, index: any) => `
+            <li class="flex gap-3 border-b pb-3" key="${item.id}">
+              <img src="${item.image}" alt="${item.name}" class="w-16 h-16 object-cover rounded" />
+              <div class="flex-1">
+                <h4 class="font-semibold text-sm">${item.name}</h4>
+                <p class="text-primary-600 font-bold">$${item.price.toFixed(2)}</p>
+              </div>
+              <button 
+                onclick="removeFromCart(${index})"
+                class="text-red-500 hover:text-red-700 text-xl"
+                title="Eliminar del carrito"
+              >
+                🗑️
+              </button>
+            </li>
+          `).join('')}
+        </ul>
+      `;
+    }
+
+    // Actualizar total
+    const total = cart.reduce((sum: any, item: { price: any; }) => sum + item.price, 0).toFixed(2);
+    totalContainer.textContent = `Total: $${total}`;
+  }
+
+  // Eliminar producto del carrito
+  window.removeFromCart = function (index: any) {
+    const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+    const removed = cart.splice(index, 1);
+    localStorage.setItem('cart', JSON.stringify(cart));
+    alert(`${removed[0].name} eliminado del carrito`);
+    window.dispatchEvent(new Event('storage'));
+  };
+
+  // Escuchar cambios (ej. desde ProductCard)
+  window.addEventListener('storage', updateCartDisplay);
+
+  // Actualizar al cargar
+  document.addEventListener('DOMContentLoaded', updateCartDisplay);
+</script>

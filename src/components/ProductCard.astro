@@ -1,0 +1,22 @@
+---
+// src/components/ui/ProductCard.astro
+const { product } = Astro.props;
+---
+
+<div class="border rounded-lg overflow-hidden shadow hover:shadow-lg transition">
+  <img src={product.image} alt={product.name} class="w-full h-48 object-cover" />
+  <div class="p-4">
+    <h3 class="font-semibold text-lg">{product.name}</h3>
+    <p class="text-primary-600 font-bold">${product.price.toFixed(2)}</p>
+    <button
+      class="mt-2 w-full bg-primary-600 text-white py-2 rounded hover:bg-primary-700 transition"
+      data-action="add-to-cart"
+      data-product-id="{product.id}"
+      data-product-name="{product.name}"
+      data-product-price="{product.price}"
+      data-product-image="{product.image}"
+    >
+      Agregar al carrito
+    </button>
+  </div>
+</div>

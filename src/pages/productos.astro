@@ -1,0 +1,60 @@
+---
+// src/pages/productos.astro
+import Header from '../components/Header.astro';
+import ProductCard from '../components/ProductCard.astro';
+
+// Lista de productos (mock)
+const products = [
+  {
+    id: 1,
+    name: "Camiseta Negra Minimalista",
+    price: 29.99,
+    image: "https://placehold.co/300x300/111/fff?text=Camiseta+Negra",
+  },
+  {
+    id: 2,
+    name: "Jean Azul Clásico",
+    price: 59.99,
+    image: "https://placehold.co/300x300/1976D2/fff?text=Jean+Azul",
+  },
+  {
+    id: 3,
+    name: "Zapatillas Blancas Urban",
+    price: 89.99,
+    image: "https://placehold.co/300x300/fff/000?text=Zapatillas",
+  },
+  {
+    id: 4,
+    name: "Chaqueta Verde Militar",
+    price: 75.00,
+    image: "https://placehold.co/300x300/2E7D32/fff?text=Chaqueta",
+  },
+  {
+    id: 5,
+    name: "Sudadera Gris Oversize",
+    price: 45.00,
+    image: "https://placehold.co/300x300/666/fff?text=Sudadera",
+  },
+];
+---
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Productos - StyleHub</title>
+</head>
+<body class="bg-gray-50 min-h-screen">
+  <Header />
+  
+  <main class="container mx-auto px-6 py-8">
+    <h1 class="text-3xl font-bold text-gray-800 mb-6">Nuestros Productos</h1>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {products.map((product) => (
+        <ProductCard product={product} key={product.id} />
+      ))}
+    </div>
+  </main>
+</body>
+</html>
