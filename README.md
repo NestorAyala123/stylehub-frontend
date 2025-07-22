@@ -1,3 +1,18 @@
+Endpoints implementados con datos simulados (mock):
+GET /products
+
+Devuelve una lista estática de productos (mock) para pruebas iniciales.
+
+Permite probar el endpoint sin necesidad de conexión a la base de datos.
+
+POST /login
+
+Simula un login básico.
+
+Valida que se envíen email y password en la petición.
+
+Responde con mensaje de éxito y datos del usuario simulados.
+
 # Astro Starter Kit: Basics
 
 ```sh
