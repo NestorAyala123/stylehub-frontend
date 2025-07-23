@@ -99,8 +99,7 @@ Desde la raíz de cada proyecto (`frontend/` o `backend/`):
 - 📦 Repositorio organizado por carpetas: `frontend`, `backend`, `docs`
 ---
 
-Este proyecto fue desarrollado como parte del curso de **Tecnologías de Desarrollo**  
-**Ingeniería en Software – ULEAM, Julio 2025**.
+Este proyecto está siendo desarrollado como parte del curso de **Ingeniería en Software – ULEAM, Julio 2025**.
 
 **Equipo**:  
 - Néstor Ayala  
