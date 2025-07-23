@@ -1,43 +1,34 @@
 const express = require("express");
-const app = express();
+const cors = require("cors");
+require("dotenv").config();
 
+const productRoutes = require("./routes/products");
+const authRoutes = require("./routes/auth");
+const cartRoutes = require("./routes/cart");
+
+// Swagger
+const swaggerUi = require("swagger-ui-express");
+const swaggerSpec = require("./swagger");
+
+const app = express();
+app.use(cors());
 app.use(express.json());
 
-// Mock de productos (simulación de base de datos)
-const products = [
-  { id: 1, name: "Camiseta", price: 20 },
-  { id: 2, name: "Pantalón", price: 35 },
-  { id: 3, name: "Zapatos", price: 50 },
-];
+// Rutas
+app.use("/products", productRoutes);
+app.use("/login", authRoutes);
+app.use("/cart", cartRoutes);
 
-// Endpoint GET /products
-app.get("/products", (req, res) => {
-  res.json(products);
-});
+// Ruta de documentación Swagger
+app.use(
+  "/api-docs",
+  swaggerUi.serve,
+  swaggerUi.setup(swaggerSpec)
+);
 
-// Endpoint POST /login (simulación simple)
-app.post("/login", (req, res) => {
-  const { email, password } = req.body;
-
-  // Aquí podrías validar con tu base de datos
-  if (
-    email === "danna@example.com" &&
-    password === "123456"
-  ) {
-    res.json({
-      message: "Login exitoso",
-      user: { email },
-    });
-  } else {
-    res
-      .status(401)
-      .json({ error: "Credenciales inválidas" });
-  }
-});
-
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(
-    `Servidor corriendo en puerto ${PORT}`
+    `Servidor backend corriendo en http://localhost:${PORT}`
   );
 });
