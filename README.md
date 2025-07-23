@@ -97,6 +97,23 @@ Desde la raíz de cada proyecto (`frontend/` o `backend/`):
 
 - 📌 Registros ADR – Decisiones Arquitectónicas en `/docs/adr/`
 - 📦 Repositorio organizado por carpetas: `frontend`, `backend`, `docs`
+
+## 📌 Modelo de Negocio – Business Model Canvas
+
+Este proyecto incluye un análisis del modelo de negocio utilizando la herramienta **Business Model Canvas**, en el cual se definen los principales aspectos de StyleHub como plataforma de e-commerce.
+
+El modelo describe:
+- Segmentos de clientes: Usuarios jóvenes que buscan ropa moderna y accesible.
+- Propuesta de valor: Interfaz rápida y visual para explorar productos de moda.
+- Canales: Sitio web, redes sociales.
+- Relación con clientes: Promociones, atención online, descuentos.
+- Fuentes de ingreso: Venta directa, alianzas con marcas.
+- Recursos clave: Equipo, tecnología, proveedores.
+- Actividades clave: Desarrollo web, marketing digital, catálogo.
+- Socios clave: Proveedores de ropa, plataformas de pago, servicios de envío.
+- Estructura de costos: Hosting, mantenimiento, publicidad y logística.
+
+> 📄 El modelo completo se encuentra documentado en el informe entregado en PDF.
 ---
 
 Este proyecto está siendo desarrollado como parte del curso de **Ingeniería en Software – ULEAM, Julio 2025**.
