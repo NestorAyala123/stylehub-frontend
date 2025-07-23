@@ -1,60 +1,40 @@
 ---
-// src/pages/productos.astro
-import Header from '../components/Header.astro';
-import ProductCard from '../components/ProductCard.astro';
+// **VERIFICA ESTE NOMBRE:** Asegúrate de que 'MainLayout.astro' es el nombre correcto de tu layout principal.
+// Si tu layout principal se llama 'Layout.astro' (sin "Main"), cámbialo a:
+// import Layout from '../layouts/Layout.astro';
+import MainLayout from '../layouts/MainLayout.astro';
+import ProductCard from '../components/ProductCard.astro'; // Importa tu componente ProductCard
 
-// Lista de productos (mock)
+// Datos de productos de prueba (mock data)
+// ¡¡ACTUALIZA imageUrl CON LOS NOMBRES DE TUS FOTOS REALES!!
 const products = [
-  {
-    id: 1,
-    name: "Camiseta Negra Minimalista",
-    price: 29.99,
-    image: "https://placehold.co/300x300/111/fff?text=Camiseta+Negra",
-  },
-  {
-    id: 2,
-    name: "Jean Azul Clásico",
-    price: 59.99,
-    image: "https://placehold.co/300x300/1976D2/fff?text=Jean+Azul",
-  },
-  {
-    id: 3,
-    name: "Zapatillas Blancas Urban",
-    price: 89.99,
-    image: "https://placehold.co/300x300/fff/000?text=Zapatillas",
-  },
-  {
-    id: 4,
-    name: "Chaqueta Verde Militar",
-    price: 75.00,
-    image: "https://placehold.co/300x300/2E7D32/fff?text=Chaqueta",
-  },
-  {
-    id: 5,
-    name: "Sudadera Gris Oversize",
-    price: 45.00,
-    image: "https://placehold.co/300x300/666/fff?text=Sudadera",
-  },
+  { id: 1, title: 'Camiseta de Fútbol Clásica', price: 29.99, imageUrl: '/src/assets/camiseta-barcelona.jpg' }, // EJEMPLO: USA TU NOMBRE DE ARCHIVO
+  { id: 2, title: 'Jeans Slim Fit Azules', price: 45.50, imageUrl: '/src/assets/tus-jeans.jpg', discountPercentage: 10 },
+  { id: 3, title: 'Sudadera con Capucha Cómoda', price: 35.00, imageUrl: '/src/assets/tu-sudadera.png' },
+  { id: 4, title: 'Zapatillas Urbanas Deportivas', price: 69.95, imageUrl: '/src/assets/tus-zapatillas.jpg', discountPercentage: 25 },
+  { id: 5, title: 'Vestido de Verano Floral', price: 52.75, imageUrl: '/src/assets/tu-vestido.jpeg' },
+  { id: 6, title: 'Gorra de Béisbol Negra', price: 12.00, imageUrl: '/src/assets/tu-gorra.webp' },
+  { id: 7, title: 'Chaqueta de Cuero Elegante', price: 120.00, imageUrl: '/src/assets/tu-chaqueta.jpg', discountPercentage: 15 },
+  { id: 8, title: 'Falda Midi Plisada', price: 38.25, imageUrl: '/src/assets/tu-falda.png' },
 ];
 ---
 
-<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Productos - StyleHub</title>
-</head>
-<body class="bg-gray-50 min-h-screen">
-  <Header />
-  
-  <main class="container mx-auto px-6 py-8">
-    <h1 class="text-3xl font-bold text-gray-800 mb-6">Nuestros Productos</h1>
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      {products.map((product) => (
-        <ProductCard product={product} key={product.id} />
-      ))}
-    </div>
-  </main>
-</body>
-</html>
+<MainLayout title="Catálogo de Productos - StyleHub">
+  <h1 class="text-4xl sm:text-5xl font-extrabold text-center my-10 text-gray-900 leading-tight">
+    Explora Nuestra Colección
+  </h1>
+  <p class="text-center text-gray-600 mb-12 max-w-2xl mx-auto">
+    Descubre las últimas tendencias y encuentra tu estilo ideal en nuestra amplia selección de ropa.
+  </p>
+
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 p-4 sm:p-8 max-w-7xl mx-auto">
+    {products.map(product => (
+      <ProductCard
+        title={product.title}
+        price={product.price}
+        imageUrl={product.imageUrl}
+        discountPercentage={product.discountPercentage}
+      />
+    ))}
+  </div>
+</MainLayout>
