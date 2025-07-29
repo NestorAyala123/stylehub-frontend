@@ -4,17 +4,17 @@
 // import Layout from '../layouts/Layout.astro';
 import MainLayout from '../layouts/MainLayout.astro';
 import ProductCard from '../components/ProductCard.astro';
-import CategoryFilter from '../components/CategoryFilter.astro'; // <-- ¡NUEVO! Importamos el filtro
+import CategoryFilter from '../components/CategoryFilter.astro'; // Componente de filtro de categoría
 
-// --- LÓGICA DE FILTRADO (Simulado) ---
-// Obtenemos la categoría seleccionada de los parámetros de la URL
+// --- LÓGICA DE FILTRADO Y BÚSQUEDA ---
 const url = new URL(Astro.request.url);
 const selectedCategory = url.searchParams.get('category') || '';
+const searchTerm = url.searchParams.get('search') || ''; // <-- ¡NUEVO! Obtenemos el término de búsqueda
 
 // Datos de productos de prueba (mock data)
-// ¡¡ACTUALIZA imageUrl CON LOS NOMBRES DE TUS FOTOS REALES!!
+// ¡¡ESTAS RUTAS YA ESTÁN ACTUALIZADAS CON LAS TUYAS!!
 const allProducts = [
-  { id: 1, title: 'Camiseta de Fútbol Clásica', category: 'Camisetas', price: 29.99, imageUrl: '/src/assets/camiseta-barcelona.jpg' }, // EJEMPLO: USA TU NOMBRE DE ARCHIVO
+  { id: 1, title: 'Camiseta de Fútbol Clásica', category: 'Camisetas', price: 29.99, imageUrl: '/src/assets/camiseta-barcelona.jpg' },
   { id: 2, title: 'Jeans Slim Fit Azules', category: 'Pantalones', price: 45.50, imageUrl: '/src/assets/Jeans-azul.png', discountPercentage: 10 },
   { id: 3, title: 'Sudadera con Capucha Cómoda', category: 'Sudaderas', price: 35.00, imageUrl: '/src/assets/sudadera-capucha.png' },
   { id: 4, title: 'Zapatillas Adidas Yeezy Boost', category: 'Calzado', price: 69.95, imageUrl: '/src/assets/Zapatillas-Adidas-Yeezy-Boost.png', discountPercentage: 25 },
@@ -28,17 +28,23 @@ const allProducts = [
 // Obtenemos una lista única de categorías para el filtro
 const categories = Array.from(new Set(allProducts.map(p => p.category)));
 
-// Filtramos los productos según la categoría seleccionada
-const filteredProducts = selectedCategory
-  ? allProducts.filter(product => product.category === selectedCategory)
-  : allProducts;
+// Filtramos los productos por categoría Y por término de búsqueda
+let filteredProducts = allProducts;
+
+if (selectedCategory) {
+  filteredProducts = filteredProducts.filter(product => product.category === selectedCategory);
+}
+
+if (searchTerm) {
+  const lowerCaseSearchTerm = searchTerm.toLowerCase();
+  filteredProducts = filteredProducts.filter(product =>
+    product.title.toLowerCase().includes(lowerCaseSearchTerm)
+  );
+}
 
 // --- DETERMINAR SI ES UNA PETICIÓN HTMX ---
-// Si la cabecera 'HX-Request' está presente, significa que la petición viene de HTMX
 const isHxRequest = Astro.request.headers.get('HX-Request') === 'true';
 
-// Si es una petición HTMX, solo devolvemos la cuadrícula de productos, no el layout completo
-// Esto es CRÍTICO para HTMX: solo actualiza la parte de la página que cambia
 if (isHxRequest) {
   return Astro.html`
     <div id="product-list" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 p-4 sm:p-8 max-w-7xl mx-auto">
@@ -47,7 +53,7 @@ if (isHxRequest) {
           price: product.price,
           imageUrl: product.imageUrl,
           discountPercentage: product.discountPercentage
-      })) : '<p class="text-center text-gray-600 col-span-full">No se encontraron productos en esta categoría.</p>'}
+      })) : '<p class="text-center text-gray-600 col-span-full">No se encontraron productos que coincidan con los criterios de búsqueda o filtro.</p>'}
     </div>
   `;
 }
@@ -61,8 +67,29 @@ if (isHxRequest) {
     Descubre las últimas tendencias y encuentra tu estilo ideal en nuestra amplia selección de ropa.
   </p>
 
-  <div class="max-w-7xl mx-auto px-4 sm:px-8">
-    <CategoryFilter categories={categories} selectedCategory={selectedCategory} />
+  <div class="max-w-7xl mx-auto px-4 sm:px-8 mb-8 flex flex-col sm:flex-row gap-4">
+    <div class="flex-1">
+      <CategoryFilter categories={categories} selectedCategory={selectedCategory} />
+    </div>
+
+    <div class="flex-1 p-4 bg-gray-50 rounded-lg shadow-sm">
+      <h2 class="text-xl font-semibold text-gray-800 mb-4">Buscar Productos</h2>
+      <input
+        type="text"
+        name="search"
+        placeholder="Buscar por nombre..."
+        value={searchTerm}
+        class="block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 text-gray-700"
+        hx-get="/productos"         // Cuando el input cambia, hace una petición GET a /productos
+        hx-target="#product-list"   // El resultado de la petición reemplazará el contenido del div con id="product-list"
+        hx-trigger="keyup changed delay:500ms" // Dispara después de escribir y una pausa de 500ms
+        hx-indicator="#search-indicator" // Muestra un indicador de carga (lo crearemos abajo)
+        hx-push-url="true"          // Actualiza la URL
+      >
+      <div id="search-indicator" class="htmx-indicator mt-2 text-sm text-gray-500">
+        Buscando...
+      </div>
+    </div>
   </div>
 
   <div id="product-list" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 p-4 sm:p-8 max-w-7xl mx-auto">
@@ -73,6 +100,6 @@ if (isHxRequest) {
         imageUrl={product.imageUrl}
         discountPercentage={product.discountPercentage}
       />
-    )) : <p class="text-center text-gray-600 col-span-full">No se encontraron productos en esta categoría.</p>}
+    )) : <p class="text-center text-gray-600 col-span-full">No se encontraron productos que coincidan con los criterios de búsqueda o filtro.</p>}
   </div>
 </MainLayout>
