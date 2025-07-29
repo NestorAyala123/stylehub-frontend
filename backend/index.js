@@ -1,34 +1,36 @@
 const express = require("express");
 const cors = require("cors");
 require("dotenv").config();
-
-const productRoutes = require("./routes/products");
-const authRoutes = require("./routes/auth");
-const cartRoutes = require("./routes/cart");
-
-// Swagger
 const swaggerUi = require("swagger-ui-express");
 const swaggerSpec = require("./swagger");
+
+const authRoutes = require("./routes/authRoutes");
+const protectedRoutes = require("./routes/protectedRoutes");
+const paymentRoutes = require("./routes/paymentRoutes"); // ✅
 
 const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Rutas
-app.use("/products", productRoutes);
-app.use("/login", authRoutes);
-app.use("/cart", cartRoutes);
+app.get("/", (req, res) => {
+  res.send("hola. Bienvenid@ StyleHub");
+});
 
-// Ruta de documentación Swagger
+// Swagger docs
 app.use(
   "/api-docs",
   swaggerUi.serve,
   swaggerUi.setup(swaggerSpec)
 );
 
-const PORT = process.env.PORT || 3000;
+// Rutas
+app.use("/api/auth", authRoutes);
+app.use("/api", protectedRoutes);
+app.use("/api", paymentRoutes); // ✅ aquí se conectan Stripe y PayPal
+
+const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
   console.log(
-    `Servidor backend corriendo en http://localhost:${PORT}`
+    `Servidor corriendo en http://localhost:${PORT}`
   );
 });
