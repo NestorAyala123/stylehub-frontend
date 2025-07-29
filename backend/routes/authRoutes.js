@@ -4,9 +4,12 @@ const {
   signUp,
   signIn,
 } = require("../controllers/authController");
+
 const {
   SIGN_OUT_SCOPES,
 } = require("@supabase/supabase-js");
+
+const paymentController = require("../controllers/paymentController");
 
 /**
  * @swagger
@@ -36,6 +39,5 @@ router.post(
   "/checkout/paypal",
   paymentController.createPayPalOrder
 );
-
 
 module.exports = router;
