@@ -7,15 +7,15 @@ import '../styles/global.css';
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>StyleHub</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>StyleHub</title>
+  <script src="https://unpkg.com/htmx.org@1.9.10" integrity="sha384-PcgAJ3LqVbgT2M95nsEDQcTfrAIyAJPXqbopBBuGzGKbFXLqmJdoKlNFXVo9NBUY" crossorigin="anonymous"></script>
 </head>
 <body class="min-h-screen flex flex-col bg-gray-50">
-  <Header />
-  <main class="flex-grow">
-    <slot /> <!-- Contenido dinámico de las páginas -->
-  </main>
-  <Footer />
+  <Header />
+  <main class="flex-grow">
+    <slot />   </main>
+  <Footer />
 </body>
 </html>
