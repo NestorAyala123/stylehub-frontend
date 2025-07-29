@@ -1,4 +1,5 @@
 ---
+// src/components/CategoryFilter.astro
 interface Props {
   categories: string[];
   selectedCategory?: string;
@@ -7,19 +8,21 @@ interface Props {
 const { categories, selectedCategory } = Astro.props;
 ---
 
-<div class="mb-8 p-4 bg-gray-50 rounded-lg shadow-sm">
+<div class="p-4 bg-gray-50 rounded-lg shadow-sm">
   <h2 class="text-xl font-semibold text-gray-800 mb-4">Filtrar por Categoría</h2>
   <select
     name="category"
+    hx-get="/productos"
+    hx-target="#main-content-area"
+    hx-trigger="change"
+    hx-push-url="true"
     class="block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 text-gray-700"
-    hx-get="/productos"           // Cuando cambia el selector, hace una petición GET a /productos
-    hx-target="#product-list"     // El resultado de la petición reemplazará el contenido del div con id="product-list"
-    hx-trigger="change"           // El trigger es el evento 'change' del select
-    hx-push-url="true"            // Opcional: Actualiza la URL en el navegador sin recargar (para compartir el link)
   >
     <option value="">Todas las Categorías</option>
-    {categories.map(category => (
-      <option value={category} selected={selectedCategory === category}>{category}</option>
+    {categories.map((category) => (
+      <option value={category} {...(selectedCategory === category ? { selected: true } : {})}>
+        {category}
+      </option>
     ))}
   </select>
 </div>

@@ -1,21 +1,17 @@
 ---
-// **VERIFICA ESTE NOMBRE:** Asegúrate de que 'MainLayout.astro' es el nombre correcto de tu layout principal.
-// Si tu layout principal se llama 'Layout.astro' (sin "Main"), cámbialo a:
-// import Layout from '../layouts/Layout.astro';
+// productos.astro
 import MainLayout from '../layouts/MainLayout.astro';
 import ProductCard from '../components/ProductCard.astro';
 import CategoryFilter from '../components/CategoryFilter.astro';
 
-// --- LÓGICA DE FILTRADO, BÚSQUEDA Y PAGINACIÓN ---
-const PRODUCTS_PER_PAGE = 8; // Define cuántos productos se muestran por página
+const PRODUCTS_PER_PAGE = 8;
 
 const url = new URL(Astro.request.url);
 const selectedCategory = url.searchParams.get('category') || '';
 const searchTerm = url.searchParams.get('search') || '';
-const currentPage = parseInt(url.searchParams.get('page') || '1'); // Obtiene la página actual, por defecto 1
+const currentPage = parseInt(url.searchParams.get('page') || '1');
 
-// Datos de productos de prueba (mock data)
-// ¡¡ESTAS RUTAS ESTÁN ACTUALIZADAS CON LAS TUYAS EXISTENTES!!
+// Mock data
 const allProducts = [
   { id: 1, title: 'Camiseta de Fútbol Clásica', category: 'Camisetas', price: 29.99, imageUrl: '/src/assets/camiseta-barcelona.jpg' },
   { id: 2, title: 'Jeans Slim Fit Azules', category: 'Pantalones', price: 45.50, imageUrl: '/src/assets/Jeans-azul.png', discountPercentage: 10 },
@@ -25,155 +21,156 @@ const allProducts = [
   { id: 6, title: 'Gorra de Béisbol Negra', category: 'Accesorios', price: 12.00, imageUrl: '/src/assets/Gorra de Béisbol Negra.jpg' },
   { id: 7, title: 'Chaqueta de Cuero Elegante', category: 'Chaquetas', price: 120.00, imageUrl: '/src/assets/Chaqueta de Cuero Elegante.jpg', discountPercentage: 15 },
   { id: 8, title: 'Falda Midi Plisada', category: 'Faldas', price: 38.25, imageUrl: '/src/assets/Falda Midi Plisada.jpg' },
-  // *** Duplicados para prueba de paginación con tus imágenes existentes ***
-  { id: 9, title: 'Camiseta Deportiva Azul', category: 'Camisetas', price: 28.00, imageUrl: '/src/assets/camiseta-barcelona.jpg' }, // Reutiliza camiseta
-  { id: 10, title: 'Pantalón Vaquero Oscuro', category: 'Pantalones', price: 44.00, imageUrl: '/src/assets/Jeans-azul.png', discountPercentage: 5 }, // Reutiliza jeans
-  { id: 11, title: 'Hoodie Suave Gris', category: 'Sudaderas', price: 34.00, imageUrl: '/src/assets/sudadera-capucha.png' }, // Reutiliza sudadera
-  { id: 12, title: 'Zapatillas de Moda Blancas', category: 'Calzado', price: 68.00, imageUrl: '/src/assets/Zapatillas-Adidas-Yeezy-Boost.png', discountPercentage: 20 }, // Reutiliza zapatillas
-  { id: 13, title: 'Vestido Casual Ligero', category: 'Vestidos', price: 50.00, imageUrl: '/src/assets/Vestido de Verano Floral.jpg' }, // Reutiliza vestido
-  { id: 14, title: 'Gorra Estilo Urbano', category: 'Accesorios', price: 11.00, imageUrl: '/src/assets/Gorra de Béisbol Negra.jpg' }, // Reutiliza gorra
-  { id: 15, title: 'Chaqueta Bomber Negra', category: 'Chaquetas', price: 115.00, imageUrl: '/src/assets/Chaqueta de Cuero Elegante.jpg', discountPercentage: 10 }, // Reutiliza chaqueta
-  { id: 16, title: 'Falda Plisada Verano', category: 'Faldas', price: 37.00, imageUrl: '/src/assets/Falda Midi Plisada.jpg' }, // Reutiliza falda
-  { id: 17, title: 'Blusa de Seda', category: 'Blusas', price: 60.00, imageUrl: '/src/assets/camiseta-barcelona.jpg' }, // Un producto nuevo con imagen existente
-  { id: 18, title: 'Pantalones Cargo', category: 'Pantalones', price: 55.00, imageUrl: '/src/assets/Jeans-azul.png' }, // Otro producto nuevo con imagen existente
+  { id: 9, title: 'Camiseta Deportiva Azul', category: 'Camisetas', price: 28.00, imageUrl: '/src/assets/camiseta-barcelona.jpg' },
+  { id: 10, title: 'Pantalón Vaquero Oscuro', category: 'Pantalones', price: 44.00, imageUrl: '/src/assets/Jeans-azul.png', discountPercentage: 5 },
+  { id: 11, title: 'Hoodie Suave Gris', category: 'Sudaderas', price: 34.00, imageUrl: '/src/assets/sudadera-capucha.png' },
+  { id: 12, title: 'Zapatillas de Moda Blancas', category: 'Calzado', price: 68.00, imageUrl: '/src/assets/Zapatillas-Adidas-Yeezy-Boost.png', discountPercentage: 20 },
+  { id: 13, title: 'Vestido Casual Ligero', category: 'Vestidos', price: 50.00, imageUrl: '/src/assets/Vestido de Verano Floral.jpg' },
+  { id: 14, title: 'Gorra Estilo Urbano', category: 'Accesorios', price: 11.00, imageUrl: '/src/assets/Gorra de Béisbol Negra.jpg' },
+  { id: 15, title: 'Chaqueta Bomber Negra', category: 'Chaquetas', price: 115.00, imageUrl: '/src/assets/Chaqueta de Cuero Elegante.jpg', discountPercentage: 10 },
+  { id: 16, title: 'Falda Plisada Verano', category: 'Faldas', price: 37.00, imageUrl: '/src/assets/Falda Midi Plisada.jpg' },
+  { id: 17, title: 'Blusa de Seda', category: 'Blusas', price: 60.00, imageUrl: '/src/assets/camiseta-barcelona.jpg' },
+  { id: 18, title: 'Pantalones Cargo', category: 'Pantalones', price: 55.00, imageUrl: '/src/assets/Jeans-azul.png' },
 ];
 
-// Obtenemos una lista única de categorías para el filtro
 const categories = Array.from(new Set(allProducts.map(p => p.category)));
 
-// Aplicamos filtros de categoría y búsqueda
-let productsFilteredAndSearched = allProducts;
+// Filtro
+let filteredProducts = allProducts;
 
 if (selectedCategory) {
-  productsFilteredAndSearched = productsFilteredAndSearched.filter(product => product.category === selectedCategory);
+  filteredProducts = filteredProducts.filter(p => p.category === selectedCategory);
 }
 
 if (searchTerm) {
-  const lowerCaseSearchTerm = searchTerm.toLowerCase();
-  productsFilteredAndSearched = productsFilteredAndSearched.filter(product =>
-    product.title.toLowerCase().includes(lowerCaseSearchTerm)
-  );
+  const term = searchTerm.toLowerCase();
+  filteredProducts = filteredProducts.filter(p => p.title.toLowerCase().includes(term));
 }
 
-// Lógica de Paginación
-const totalPages = Math.ceil(productsFilteredAndSearched.length / PRODUCTS_PER_PAGE);
-const startIndex = (currentPage - 1) * PRODUCTS_PER_PAGE;
-const endIndex = startIndex + PRODUCTS_PER_PAGE;
-const productsToDisplay = productsFilteredAndSearched.slice(startIndex, endIndex);
+// Paginación
+const totalPages = Math.ceil(filteredProducts.length / PRODUCTS_PER_PAGE);
+const start = (currentPage - 1) * PRODUCTS_PER_PAGE;
+const end = start + PRODUCTS_PER_PAGE;
+const paginatedProducts = filteredProducts.slice(start, end);
 
-// --- DETERMINAR SI ES UNA PETICIÓN HTMX ---
+// HTMX request
 const isHxRequest = Astro.request.headers.get('HX-Request') === 'true';
 
-// Si es una petición HTMX, solo devolvemos el contenido dinámico (cuadrícula + paginación)
 if (isHxRequest) {
   return Astro.html`
     <div id="product-list" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 p-4 sm:p-8 max-w-7xl mx-auto">
-      ${productsToDisplay.length > 0 ? productsToDisplay.map(product => Astro.renderComponent(ProductCard, {
+      ${paginatedProducts.map((product) => Astro.render(Component, {
+        component: ProductCard,
+        props: {
           title: product.title,
           price: product.price,
           imageUrl: product.imageUrl,
-          discountPercentage: product.discountPercentage
-      })) : '<p class="text-center text-gray-600 col-span-full">No se encontraron productos que coincidan con los criterios de búsqueda o filtro.</p>'}
+          discountPercentage: product.discountPercentage ?? null
+        }
+      }))}
     </div>
 
-    <div id="pagination" class="flex justify-center items-center space-x-2 mt-8 mb-12">
-      ${Array.from({ length: totalPages }, (_, i) => i + 1).map(pageNumber => {
-        // Construye la URL para cada enlace de paginación
-        const params = new URLSearchParams();
-        if (selectedCategory) params.set('category', selectedCategory);
-        if (searchTerm) params.set('search', searchTerm);
-        params.set('page', pageNumber.toString());
-        const pageUrl = `/productos?${params.toString()}`;
+    ${totalPages > 1 ? Astro.html`
+      <div id="pagination" class="flex justify-center items-center space-x-2 mt-8 mb-12">
+        ${Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => {
+          const params = new URLSearchParams();
+          if (selectedCategory) params.set('category', selectedCategory);
+          if (searchTerm) params.set('search', searchTerm);
+          params.set('page', page.toString());
+          const href = `/productos?${params.toString()}`;
 
-        return Astro.html`
-          <a
-            href={pageUrl}
-            class:list={[
-              'px-4 py-2 rounded-lg transition-colors duration-200',
-              { 'bg-blue-600 text-white font-bold': pageNumber === currentPage },
-              { 'bg-gray-200 text-gray-700 hover:bg-gray-300': pageNumber !== currentPage }
-            ]}
-            hx-get={pageUrl}
-            hx-target="#main-content-area" // Apuntamos a un nuevo ID que contendrá la lista y la paginación
-            hx-push-url="true"
-          >
-            ${pageNumber}
-          </a>
-        `;
-      })}
-    </div>
+          return Astro.html`
+            <a
+              href="${href}"
+              hx-get="${href}"
+              hx-target="#main-content-area"
+              hx-push-url="true"
+              class="${page === currentPage 
+                ? 'bg-blue-600 text-white font-bold' 
+                : 'bg-gray-200 text-gray-700 hover:bg-gray-300'} px-4 py-2 rounded-lg transition-colors duration-200"
+            >
+              ${page}
+            </a>
+          `;
+        })}
+      </div>
+    ` : ''}
   `;
 }
+---
+
 <MainLayout title="Catálogo de Productos - StyleHub">
-  <h1 class="text-4xl sm:text-5xl font-extrabold text-center my-10 text-gray-900 leading-tight">
-    Explora Nuestra Colección
-  </h1>
-  <p class="text-center text-gray-600 mb-12 max-w-2xl mx-auto">
-    Descubre las últimas tendencias y encuentra tu estilo ideal en nuestra amplia selección de ropa.
-  </p>
+  <main>
+    <h1 class="text-4xl sm:text-5xl font-extrabold text-center my-10 text-gray-900 leading-tight">
+      Explora Nuestra Colección
+    </h1>
+    <p class="text-center text-gray-600 mb-12 max-w-2xl mx-auto">
+      Descubre las últimas tendencias y encuentra tu estilo ideal en nuestra amplia selección de ropa.
+    </p>
 
-<div class="max-w-7xl mx-auto px-4 sm:px-8 mb-8 flex flex-col sm:flex-row gap-4">
-  <div class="flex-1">
-    <CategoryFilter categories={categories} selectedCategory={selectedCategory} />
-  </div>
+    <div class="max-w-7xl mx-auto px-4 sm:px-8 mb-8 flex flex-col sm:flex-row gap-4">
+      <div class="flex-1">
+        <CategoryFilter 
+          categories={categories} 
+          selectedCategory={selectedCategory} 
+        />
+      </div>
 
-  <div class="flex-1 p-4 bg-gray-50 rounded-lg shadow-sm">
-    <h2 class="text-xl font-semibold text-gray-800 mb-4">Buscar Productos</h2>
-    <input
-      type="text"
-      name="search"
-      placeholder="Buscar por nombre..."
-      value={searchTerm}
-      class="block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 text-gray-700"
-      hx-get="/productos"
-      hx-target="#main-content-area"
-      hx-trigger="keyup changed delay:500ms"
-      hx-indicator="#search-indicator"
-      hx-push-url="true"
-    />
-    <div id="search-indicator" class="htmx-indicator mt-2 text-sm text-gray-500">
-      Buscando...
+      <form class="flex-1" hx-get="/productos" hx-target="#main-content-area" hx-trigger="input delay:500ms" hx-push-url="true">
+        <div class="p-4 bg-gray-50 rounded-lg shadow-sm">
+          <h2 class="text-xl font-semibold text-gray-800 mb-4">Buscar Productos</h2>
+          <input
+            type="text"
+            name="search"
+            placeholder="Buscar por nombre..."
+            value={searchTerm}
+            class="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 text-gray-700"
+            autocomplete="off"
+          />
+          <div class="htmx-indicator mt-2 text-sm text-gray-500">Buscando...</div>
+        </div>
+      </form>
     </div>
-  </div>
-</div>
 
-<div id="main-content-area">
-  <div id="product-list" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 p-4 sm:p-8 max-w-7xl mx-auto">
-    ${productsToDisplay.length > 0 ? productsToDisplay.map(product => (
-      <ProductCard
-        title={product.title}
-        price={product.price}
-        imageUrl={product.imageUrl}
-        discountPercentage={product.discountPercentage}
-      />
-    )) : <p class="text-center text-gray-600 col-span-full">No se encontraron productos que coincidan con los criterios de búsqueda o filtro.</p>}
-  </div>
+    <div id="main-content-area">
+      <div id="product-list" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 p-4 sm:p-8 max-w-7xl mx-auto">
+        {paginatedProducts.map(product => (
+          <ProductCard 
+            title={product.title} 
+            price={product.price} 
+            imageUrl={product.imageUrl} 
+            discountPercentage={product.discountPercentage ?? null} 
+          />
+        ))}
+      </div>
 
-  <div id="pagination" class="flex justify-center items-center space-x-2 mt-8 mb-12">
-    ${Array.from({ length: totalPages }, (_, i) => i + 1).map(pageNumber => {
-      // Construye la URL para cada enlace de paginación
-      const params = new URLSearchParams();
-      if (selectedCategory) params.set('category', selectedCategory);
-      if (searchTerm) params.set('search', searchTerm);
-      params.set('page', pageNumber.toString());
-      const pageUrl = `/productos?${params.toString()}`;
+      {totalPages > 1 && (
+        <div id="pagination" class="flex justify-center items-center space-x-2 mt-8 mb-12">
+          {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => {
+            const params = new URLSearchParams();
+            if (selectedCategory) params.set('category', selectedCategory);
+            if (searchTerm) params.set('search', searchTerm);
+            params.set('page', page.toString());
+            const href = `/productos?${params.toString()}`;
 
-      return (
-        <a
-          href={pageUrl}
-          class={`px-4 py-2 rounded-lg transition-colors duration-200 ${
-            pageNumber === currentPage
-              ? 'bg-blue-600 text-white font-bold'
-              : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-          }`}
-          hx-get={pageUrl}
-          hx-target="#main-content-area" // Apuntamos a este mismo ID
-          hx-push-url="true"
-        >
-          {pageNumber}
-        </a>
-      );
-    })}
-  </div>
-</div>
+            return (
+              <a
+                href={href}
+                hx-get={href}
+                hx-target="#main-content-area"
+                hx-push-url="true"
+                class={`px-4 py-2 rounded-lg transition-colors duration-200 ${
+                  page === currentPage 
+                    ? 'bg-blue-600 text-white font-bold' 
+                    : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                }`}
+              >
+                {page}
+              </a>
+            );
+          })}
+        </div>
+      )}
+    </div>
+  </main>
 </MainLayout>
